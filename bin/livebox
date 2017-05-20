@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Created by PhpStorm.
+ * User: nicolas
+ * Date: 05/02/17
+ * Time: 14:29
+ */
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Devgiants\Command;
+use Pimple\Container;
+use Devgiants\Service\BackupTools;
+
+$application = new Application('livebox', '@package_version@');
+
+// Check newer version
+$manifest = file_get_contents(Command\UpdateCommand::MANIFEST_FILE_URL);
+
+$manifest = json_decode($manifest)[0];
+
+// Display warning
+if($manifest->version > $application->getVersion()) {
+    echo "Newer version is available (you run {$application->getVersion()} while last stable version is {$manifest->version}). Run self-update command to update";
+}
+
+// Register commands
+//$application->add(new Command\ReadCommand());
+
+$application->run();

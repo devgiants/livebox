@@ -1,0 +1,19 @@
+{
+  "chmod": "0755",
+  "directories": ["src"],
+  "files": [
+    "LICENSE",
+    "README.md"
+  ],
+  "finder": [
+    {
+      "name": ["*.php", "*.json"],
+      "exclude": ["Tests"],
+      "in": "vendor"
+    }
+  ],
+  "git-version": "package_version",
+  "main": "bin/livebox",
+  "output": "livebox.phar",
+  "stub": true
+}
