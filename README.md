@@ -1,20 +1,20 @@
-# One wire utility command line tool 1.0.0
+# Livebox control command line tool 0.0.1
 ## Presentation
-Allow to easily read (in future write) 1-wire sensors. So far, it is focused on Raspberry Pi GPIO usage
+Allow to easily read (in future control) Livebox (internet box from Orange ISP)
 
 ## Installation
 
 ```
 # Get the application
-wget https://devgiants.github.io/one-wire/downloads/one-wire-1.0.0.phar
+wget https://devgiants.github.io/livebox/downloads/livebox-0.0.1.phar
 
 # Move it in command folder
-mv one-wire-1.0.0.phar /usr/bin/one-wire
+mv livebox-0.0.1.phar /usr/bin/livebox
 
 # Make it executable
-chmod u+x /usr/bin/one-wire
+chmod u+x /usr/bin/livebox
 ```
 
-## Read value
+## Read WAN IP
 
-TODO
+`livebox read wan-ip`
