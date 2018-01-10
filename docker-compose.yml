@@ -1,0 +1,12 @@
+version: '2'
+services:
+  php:
+    env_file: ./.env
+    build:
+      context: docker/images/php-fpm7.0
+      args:
+        UID: ${HOST_UID}
+    volumes:
+      - ${HOST_RELATIVE_APP_PATH}:/var/www/html
+    environment:
+      XDEBUG_CONFIG: remote_host=192.168.1.19

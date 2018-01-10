@@ -12,7 +12,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use Symfony\Component\Console\Application;
 use Devgiants\Command;
 use Pimple\Container;
-use Devgiants\Service\BackupTools;
+use Devgiants\Service\LiveboxTools;
+use Monolog\Logger;
 
 $application = new Application('livebox', '@package_version@');
 
@@ -25,7 +26,15 @@ if(null !== $manifest && ($manifest->version > $application->getVersion())) {
     echo "Newer version is available (you run {$application->getVersion()} while last stable version is {$manifest->version}). Run self-update command to update";
 }
 
+// Handle dependancies
+$container = new Container();
+$container['tools'] = new LiveboxTools();
+$container['main_logger'] = new Logger( 'main' );
+
 // Register commands
-$application->add(new Command\ReadCommand());
+
+$application->add(new Command\WanCommand('wan', $container));
+$application->add(new Command\WifiStatusCommand('wifi:status', $container));
+$application->add(new Command\WifiSwitchCommand('wifi:switch', $container));
 
 $application->run();

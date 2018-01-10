@@ -1,0 +1,25 @@
+{
+  "name": "devgiants/livebox",
+  "description": "Control liveboxes 2, 3 and 4",
+  "license": "MIT",
+  "require": {
+    "symfony/console": "^3.2",
+    "symfony/yaml": "^3.2",
+    "symfony/config": "^3.2",
+    "pimple/pimple": "~3.0",
+    "herrera-io/phar-update": "~1.0",
+    "guzzlehttp/guzzle": "^6.2",
+    "monolog/monolog": "^1.23",
+    "kriswallsmith/buzz": "^0.15.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Devgiants\\": "src/Devgiants"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Devgiants\\Tests\\": "tests"
+    }
+  }
+}
