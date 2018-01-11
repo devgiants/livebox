@@ -8,7 +8,6 @@
     "symfony/config": "^3.2",
     "pimple/pimple": "~3.0",
     "herrera-io/phar-update": "~1.0",
-    "guzzlehttp/guzzle": "^6.2",
     "monolog/monolog": "^1.23",
     "kriswallsmith/buzz": "^0.15.2"
   },
