@@ -3,3 +3,4 @@
 vendor
 box
 livebox.phar
+/livebox/bin/config.yml
