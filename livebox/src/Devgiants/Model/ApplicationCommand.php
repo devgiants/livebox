@@ -9,14 +9,21 @@
 namespace Devgiants\Model;
 
 
+use Devgiants\Exception\MissingConfigurationFileException;
 use Devgiants\Service\LiveboxTools;
 use Monolog\Logger;
 use Pimple\Container;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
 
 abstract class ApplicationCommand extends Command {
+
+
+	const FILE_OPTION = 'file';
+
 	/**
 	 * @var Container
 	 */
@@ -62,8 +69,42 @@ abstract class ApplicationCommand extends Command {
 	/**
 	 * @inheritdoc
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$this->tools->logout('192.168.1.1');
+	protected function configure() {
+		$this
+			->addOption( self::FILE_OPTION, "f", InputOption::VALUE_OPTIONAL, "The YML configuration file" );
+	}
+
+	/**
+	 * @param InputInterface $input
+	 *
+	 * @return string
+	 * @throws MissingConfigurationFileException
+	 */
+	public function getConfigurationFile( InputInterface $input ) {
+		$ymlFile = $input->getOption( self::FILE_OPTION );
+		if ( $ymlFile === NULL ) {
+			$finder = new Finder();
+			$finder
+				->in( $this->container['app_dir'] )
+				->files()
+				->name( '*.yml' );
+
+			if ( $finder->count() === 1 ) {
+				foreach ( $finder as $file ) {
+					$ymlFile = $file->getRealPath();
+				}
+			} else {
+				throw new MissingConfigurationFileException();
+			}
+		}
+
+		return $ymlFile;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function execute( InputInterface $input, OutputInterface $output ) {
+		$this->tools->logout( '192.168.1.1' );
 	}
 }

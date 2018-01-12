@@ -8,14 +8,12 @@
 
 namespace Devgiants\Command;
 
-use Buzz\Browser;
+use Buzz\Message\Request;
+use Devgiants\Configuration\ConfigurationManager;
+use Devgiants\Configuration\ApplicationConfiguration as AppConf;
 use Devgiants\Model\ApplicationCommand;
-use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\RequestOptions;
 use Pimple\Container;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,6 +24,7 @@ class WifiSwitchCommand extends ApplicationCommand {
 	const STATUS = 'status';
 
 	const ON = 'on';
+
 	const OFF = 'off';
 
 	/**
@@ -47,6 +46,8 @@ class WifiSwitchCommand extends ApplicationCommand {
 			->setDescription( 'Handle Wifi operations on Livebox' )
 			->addArgument( static::STATUS, InputArgument::OPTIONAL, "Switch wifi on or off" )
 			->setHelp( "This command allows you to enable/disable Wifi" );
+
+		parent::configure();
 	}
 
 	/**
@@ -54,52 +55,60 @@ class WifiSwitchCommand extends ApplicationCommand {
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
-		$token = $this->tools->authenticate( '192.168.1.1', 'admin', '5g&9i7/VzQH]' );
+		$ymlFile = $this->getConfigurationFile( $input );
 
-		// Get status
-		if ( $input->hasArgument( static::STATUS ) ) {
+		if ( $ymlFile !== NULL && is_file( $ymlFile ) ) {
 
-			$status = $input->getArgument( static::STATUS );
-			switch ( $status ) {
-				case static::ON:
-					$parameters = [
-						"Enable" => "True",
-					];
-					break;
-				case static::OFF:
-					$parameters = [
-						"Enable" => "False",
-					];
-					break;
-				default:
-					throw new InvalidOptionException( "Status argument get only \"on\" or \"off\" value." );
+			// Structures check and configuration loading
+			$configurationManager = new ConfigurationManager( $ymlFile );
+			$configuration        = $configurationManager->load();
+
+			// Authentication
+			$this->tools->authenticate(
+				$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ],
+				$configuration[ AppConf::USER[ AppConf::NODE_NAME ] ],
+				$configuration[ AppConf::PASSWORD ]
+			);
+
+			// Get status
+			if ( $input->hasArgument( static::STATUS ) ) {
+
+				$status = $input->getArgument( static::STATUS );
+				switch ( $status ) {
+					case static::ON:
+						$parameters = [
+							"Enable" => "True",
+						];
+						break;
+					case static::OFF:
+						$parameters = [
+							"Enable" => "False",
+						];
+						break;
+					default:
+						throw new InvalidOptionException( "Status argument get only \"on\" or \"off\" value." );
+				}
+
+				// Execute request
+				$response = $this->tools->createRequest(
+					Request::METHOD_POST,
+					"{$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ]}/ws",
+					[
+						"service"    => "NMC.Wifi",
+						"method"     => "set",
+						"parameters" => $parameters,
+					]
+				);
+				$json = json_decode( $response->getContent() );
 			}
 
-//			var_dump( \GuzzleHttp\json_encode( [
-//				"service"    => "NMC.Wifi",
-//				"method"     => "set",
-//				"parameters" => $parameters
-//			] ) );
 
-			$response = $this->tools->getClient()->post( "192.168.1.1/ws", [
-				RequestOptions::HEADERS => [
-					'X-Context'           => $token,
-					'X-Prototype-Version' => '1.7',
-					'Content-Type'        => 'application/x-sah-ws-1-call+json; charset=UTF-8',
-					'Accept'              => 'text/javascript'
-				],
-				RequestOptions::JSON    => [
-					"service"    => "NMC.Wifi",
-					"method"     => "set",
-					"parameters" => $parameters
-				]
-			] );
-			$json     = \GuzzleHttp\json_decode( $response->getBody()->getContents() );
-			var_dump( $json->result );
+			// Handle post command stuff
+			parent::execute( $input, $output );
+		} else {
+			$output->writeln( "<error>Filename is not correct : {$ymlFile}</error>" );
+			$this->log->addError( "Filename is not correct : {$ymlFile}" );
 		}
 
-
-		// Handle post command stuff
-		parent::execute( $input, $output );
 	}
 }

@@ -8,25 +8,18 @@
 
 namespace Devgiants\Command;
 
+use Buzz\Message\Request;
+use Devgiants\Configuration\ConfigurationManager;
+use Devgiants\Configuration\ApplicationConfiguration as AppConf;
 use Devgiants\Model\ApplicationCommand;
-use GuzzleHttp\RequestOptions;
 use Pimple\Container;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidOptionException;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class WifiStatusCommand extends ApplicationCommand {
 
 	const STATUS = 'status';
-
-	const SWITCH = 'switch';
-
-	const ON = 'on';
-	const OFF = 'off';
 
 	/**
 	 * WifiStatusCommand constructor.
@@ -45,8 +38,10 @@ class WifiStatusCommand extends ApplicationCommand {
 		$this
 			->setName( 'wifi:status' )
 			->setDescription( 'Handle Wifi operations on Livebox' )
-			->addArgument(static::STATUS,InputArgument::OPTIONAL, "Get wifi status" )
+			->addArgument( static::STATUS, InputArgument::OPTIONAL, "Get wifi status" )
 			->setHelp( "This command allows you to get wifi status" );
+
+		parent::configure();
 	}
 
 	/**
@@ -54,28 +49,35 @@ class WifiStatusCommand extends ApplicationCommand {
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
-		// Get status
-		if($input->hasArgument(static::STATUS)) {
-			$response = $this->tools->getClient()->post( "192.168.1.1/ws", [
-				RequestOptions::HEADERS => [
-					'X-Prototype-Version' => '1.7',
-					'Content-Type'        => 'application/x-sah-ws-1-call+json; charset=UTF-8',
-					'Accept'              => 'text/javascript'
-				],
-				RequestOptions::JSON    => [
-					"service" => "NMC.Wifi",
-					"method"  => "get",
-					"parameters" => []
-				]
-			] );
-			$json     = \GuzzleHttp\json_decode( $response->getBody()->getContents() );
+		$ymlFile = $this->getConfigurationFile( $input );
 
-			if(isset($json->result->status)) {
-				$output->write($json->result->status->Status ? 1 : 0);
+		if ( $ymlFile !== NULL && is_file( $ymlFile ) ) {
+
+			// Structures check and configuration loading
+			$configurationManager = new ConfigurationManager( $ymlFile );
+			$configuration        = $configurationManager->load();
+
+			// Get status
+			if ( $input->hasArgument( static::STATUS ) ) {
+				$response = $this->tools->createRequest(
+					Request::METHOD_POST,
+					"{$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ]}/ws",
+					[
+						"service"    => "NMC.Wifi",
+						"method"     => "get",
+						"parameters" => [],
+					]
+				);
+
+				$json = json_decode( $response->getContent() );
+
+				if ( isset( $json->result->status ) ) {
+					$output->write( $json->result->status->Status ? 1 : 0 );
+				}
 			}
-		}
 
-		// Handle post command stuff
-		parent::execute( $input, $output );
+			// Handle post command stuff
+			parent::execute( $input, $output );
+		}
 	}
 }

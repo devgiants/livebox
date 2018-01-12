@@ -7,14 +7,12 @@
  */
 namespace Devgiants\Command;
 
+use Buzz\Message\Request;
 use Devgiants\Model\ApplicationCommand;
-use GuzzleHttp\RequestOptions;
+use Devgiants\Configuration\ConfigurationManager;
+use Devgiants\Configuration\ApplicationConfiguration as AppConf;
 use Pimple\Container;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class WanCommand extends ApplicationCommand
@@ -35,11 +33,12 @@ class WanCommand extends ApplicationCommand
     protected function configure()
     {
         $this
-            ->setName('wan')
-            ->setDescription('Read WAN IP')
-            ->setHelp("This command allows you to read livebox WAN IP")
-
+            ->setName('wan:infos')
+            ->setDescription('Read WAN infos')
+            ->setHelp("This command allows you to read livebox WAN infos")
         ;
+
+        parent::configure();
     }
 
     /**
@@ -48,21 +47,29 @@ class WanCommand extends ApplicationCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-	    $response = $this->tools->getClient()->post( "192.168.1.1/ws", [
-		    RequestOptions::HEADERS => [
-			    'Content-Type' => 'application/x-sah-ws-1-call+json'
-		    ],
-		    RequestOptions::JSON => [
-			    "service" => "NMC",
-			    "method" => "getWANStatus",
-	            "parameters" => []
-		    ]
-	    ]);
-	    $json     = \GuzzleHttp\json_decode( $response->getBody()->getContents() );
+	    $ymlFile = $this->getConfigurationFile( $input );
 
-	    var_dump($json);
+	    if ( $ymlFile !== NULL && is_file( $ymlFile ) ) {
 
-        // Handle post command stuff
-        parent::execute($input, $output);
+		    // Structures check and configuration loading
+		    $configurationManager = new ConfigurationManager( $ymlFile );
+		    $configuration        = $configurationManager->load();
+
+
+		    // Execute request
+		    $response = $this->tools->createRequest(
+			    Request::METHOD_POST,
+			    "{$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ]}/ws",
+			    [
+				    "service"    => "NMC",
+				    "method"     => "getWANStatus",
+				    "parameters" => [],
+			    ]
+		    );
+		    $output->write($response->getContent() );
+
+		    // Handle post command stuff
+		    parent::execute( $input, $output );
+	    }
     }
 }

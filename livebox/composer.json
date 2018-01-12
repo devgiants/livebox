@@ -9,7 +9,8 @@
     "pimple/pimple": "~3.0",
     "herrera-io/phar-update": "~1.0",
     "monolog/monolog": "^1.23",
-    "kriswallsmith/buzz": "^0.15.2"
+    "kriswallsmith/buzz": "^0.15.2",
+    "symfony/finder": "^3.4"
   },
   "autoload": {
     "psr-4": {

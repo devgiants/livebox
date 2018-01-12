@@ -8,20 +8,28 @@
 
 namespace Devgiants\Service;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\SessionCookieJar;
-use GuzzleHttp\Cookie\SetCookie;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\RequestOptions;
+use Buzz\Browser;
+use Buzz\Message\Request;
+use Buzz\Util\Cookie;
+use Buzz\Util\CookieJar;
+use Buzz\Message\MessageInterface;
+use Buzz\Util\Url;
+use Symfony\Component\Console\Input\InputInterface;
 
 class LiveboxTools {
 
 	/**
-	 * @var Client
+	 * @var Browser
 	 */
-	protected $client;
+	protected $browser;
+
 	/**
-	 * @var SessionCookieJar
+	 * @var string
+	 */
+	protected $currentToken;
+
+	/**
+	 * @var CookieJar
 	 */
 	protected $cookieJar;
 
@@ -29,26 +37,17 @@ class LiveboxTools {
 	 * LiveboxTools constructor.
 	 */
 	public function __construct() {
-		$this->cookieJar = new SessionCookieJar( 'SESSION_STORAGE', true );
-
-		$this->client = new Client( [
-			'cookies' => $this->cookieJar
-		] );
+		$this->browser = new Browser();
+		$this->cookieJar = new CookieJar();
 	}
 
 	/**
-	 * @return SessionCookieJar
+	 * @return Browser
 	 */
-	public function getCookieJar() {
-		return $this->cookieJar;
+	public function getBrowser() {
+		return $this->browser;
 	}
 
-	/**
-	 * @return Client
-	 */
-	public function getClient() {
-		return $this->client;
-	}
 
 	/**
 	 * @param $host
@@ -59,40 +58,70 @@ class LiveboxTools {
 	 */
 	public function authenticate( $host, $username, $password ) {
 
-//		$cookieJar = $this->getClient()->getConfig('cookies');
-//		var_dump($cookieJar->toArray());
-
-		$response = $this->client->post( "$host/ws", [
-			RequestOptions::HEADERS => [
+		// Get token response
+		$response = $this->browser->post(
+			"$host/ws",
+			[
 				'Content-Type'  => 'application/x-sah-ws-1-call+json; charset=UTF-8',
-				'Authorization' => 'X-Sah-Login'
+				'Authorization' => 'X-Sah-Login',
 			],
-			RequestOptions::JSON    => [
+			json_encode( [
 				'service'    => 'sah.Device.Information',
 				'method'     => 'createContext',
 				'parameters' => [
 					'applicationName' => 'so_sdkut',
 					'username'        => $username,
-					'password'        => $password
-				]
-			]
-		] );
+					'password'        => $password,
+				],
+			] )
+
+		);
 
 
-		foreach($response->getHeader('Set-Cookie') as $cookieString) {
-			$cookie = SetCookie::fromString($cookieString);
-			$cookie->setDomain('192.168.1.1');
-//			var_dump( $this->cookieJar->setCookie($cookie));
-			$this->cookieJar->save();
-		}
-//		echo($this->cookieJar->count());
+		// Create sessid cookie
+		$cookie = new Cookie();
+		$cookie->fromSetCookieHeader( $response->getHeader( 'Set-Cookie' ), $host );
 
-//		var_dump( $this->cookieJar->toArray() );
-//		die();
+		// Add cookie to JAR
+		$this->cookieJar->addCookie( $cookie );
 
-		$json = \GuzzleHttp\json_decode( $response->getBody()->getContents() );
+		//		foreach($response->getHeader('Set-Cookie') as $cookieString) {
+		//			$cookie = new CookieJar();
+		//		}
+
+		//		$response = $this->client->post( "$host/ws", [
+		//			RequestOptions::HEADERS => [
+		//				'Content-Type'  => 'application/x-sah-ws-1-call+json; charset=UTF-8',
+		//				'Authorization' => 'X-Sah-Login',
+		//			],
+		//			RequestOptions::JSON    => [
+		//				'service'    => 'sah.Device.Information',
+		//				'method'     => 'createContext',
+		//				'parameters' => [
+		//					'applicationName' => 'so_sdkut',
+		//					'username'        => $username,
+		//					'password'        => $password,
+		//				],
+		//			],
+		//		] );
+
+
+		//		foreach ( $response->getHeader( 'Set-Cookie' ) as $cookieString ) {
+		//			$cookie = SetCookie::fromString( $cookieString );
+		//			$cookie->setDomain( '192.168.1.1' );
+		//			//			var_dump( $this->cookieJar->setCookie($cookie));
+		//			$this->cookieJar->save();
+		//		}
+		//		echo($this->cookieJar->count());
+
+		//		var_dump( $this->cookieJar->toArray() );
+		//		die();
+
+		$json = json_decode( $response->getContent() );
 
 		if ( ( $json->status === 0 ) && isset( $json->data->contextID ) ) {
+			$this->currentToken = $json->data->contextID;
+
 			return $json->data->contextID;
 		} else {
 			// TODO handle
@@ -100,11 +129,67 @@ class LiveboxTools {
 		}
 	}
 
+
+	/**
+	 * @return string
+	 */
+	public function getCookieHeaderForRequest() {
+		$cookieString = "Cookie: ";
+
+		foreach($this->cookieJar->getCookies() as $cookie) {
+			$cookieString .= "{$cookie->getName()}={$cookie->getValue()}; ";
+		}
+//		array_map( function ( Cookie $cookie ) use ( $cookieString ) {
+//			$cookieString .= "{$cookie->getName()}={$cookie->getValue()}; ";
+//		}, $this->cookieJar->getCookies() );
+
+		return $cookieString;
+	}
+
+	/**
+	 * @param $method
+	 * @param $url
+	 * @param array $parameters
+	 *
+	 * @return MessageInterface
+	 */
+	public function createRequest( $method, $url, $parameters = [] ) {
+		// Create request from URL
+		$request = new Request( $method );
+		$request->fromUrl( new Url( $url ) );
+
+
+		// Add headers
+		$request->setHeaders( [
+			'X-Context'           => $this->currentToken,
+			'X-Prototype-Version' => '1.7',
+			'Content-Type'        => 'application/x-sah-ws-1-call+json; charset=UTF-8',
+			'Accept'              => 'text/javascript',
+		] );
+
+		// Add cookie header
+		$request->addHeader( $this->getCookieHeaderForRequest() );
+
+		// Set content
+		$request->setContent( json_encode( $parameters ) );
+
+		$response = $this->browser->send( $request );
+
+		return $response;
+	}
+
+	/**
+	 * @return \Buzz\Util\CookieJar
+	 */
+	public function getCookieJar() {
+		return $this->cookieJar;
+	}
+
 	/**
 	 * @param $host
 	 */
 	public function logout( $host ) {
-		$response = $this->client->post( "$host/logout" );
+		$response = $this->browser->post( "$host/logout" );
 	}
 
 }
