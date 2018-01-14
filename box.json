@@ -1,7 +1,7 @@
 {
   "chmod": "0755",
   "directories": [
-    "src"
+    "livebox/src"
   ],
   "files": [
     "LICENSE",
@@ -14,13 +14,13 @@
         "*.json"
       ],
       "exclude": [
-        "Tests"
+        "livebox/Tests"
       ],
-      "in": "vendor"
+      "in": "livebox/vendor"
     }
   ],
   "git-version": "package_version",
-  "main": "bin/livebox",
+  "main": "livebox/bin/livebox",
   "output": "livebox.phar",
   "stub": true
 }
