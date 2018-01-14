@@ -30,7 +30,7 @@ if(null !== $manifest && ($manifest->version > $application->getVersion())) {
 $container = new Container();
 $container['tools'] = new LiveboxTools();
 $container['main_logger'] = new Logger( 'main' );
-$container['app_dir'] = dirname(__FILE__);
+$container['app_dir'] = getcwd();
 
 // Register commands
 
