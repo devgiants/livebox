@@ -15,7 +15,7 @@ use Pimple\Container;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class WanCommand extends ApplicationCommand
+class WanInfosCommand extends ApplicationCommand
 {
 	/**
 	 * Wan command constructor.

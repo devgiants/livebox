@@ -37,7 +37,7 @@ class WifiStatusCommand extends ApplicationCommand {
 	protected function configure() {
 		$this
 			->setName( 'wifi:status' )
-			->setDescription( 'Handle Wifi operations on Livebox' )
+			->setDescription( 'Get wifi status (1 = ON, 0 = OFF)' )
 			->addArgument( static::STATUS, InputArgument::OPTIONAL, "Get wifi status" )
 			->setHelp( "This command allows you to get wifi status" );
 

@@ -16,7 +16,6 @@ use Pimple\Container;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class WifiSwitchCommand extends ApplicationCommand {
@@ -43,7 +42,7 @@ class WifiSwitchCommand extends ApplicationCommand {
 	protected function configure() {
 		$this
 			->setName( 'wifi:switch' )
-			->setDescription( 'Handle Wifi operations on Livebox' )
+			->setDescription( 'Switch wifi on or off' )
 			->addArgument( static::STATUS, InputArgument::OPTIONAL, "Switch wifi on or off" )
 			->setHelp( "This command allows you to enable/disable Wifi" );
 
@@ -99,7 +98,9 @@ class WifiSwitchCommand extends ApplicationCommand {
 						"parameters" => $parameters,
 					]
 				);
-				$json = json_decode( $response->getContent() );
+
+				$output->write( $response->getContent() );
+
 			}
 
 
