@@ -1,14 +1,14 @@
-# Livebox 3/4 control command line tool 1.0.0
+# Livebox 3/4 control command line tool 1.1.1
 ## Presentation
 Allow to easily control Livebox 3/4 (internet box from Orange ISP) by CLI, easing home automation tasks.
 
 ## Installation
 ```
 # Get the application
-wget https://devgiants.github.io/livebox/downloads/livebox-1.0.0.phar
+wget https://devgiants.github.io/livebox/downloads/livebox-1.1.1.phar
 
 # Move it in command folder
-mv livebox-1.0.0.phar /usr/bin/livebox
+mv livebox-1.1.1.phar /usr/bin/livebox
 
 # Make it executable
 chmod u+x /usr/bin/livebox
