@@ -48,9 +48,10 @@ filter:
         - "livebox/vendor/"
         - "livebox/vendor/*"
 build:
-    project_setup:
+    dependencies:
         before:
             - "cd livebox"
+            - "composer update"
     nodes:
         analysis:
             tests:
