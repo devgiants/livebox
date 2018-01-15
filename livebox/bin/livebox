@@ -33,6 +33,7 @@ $container['main_logger'] = new Logger( 'main' );
 $container['app_dir'] = getcwd();
 
 // Register commands
+$application->add(new Command\UpdateCommand('self-update'));
 
 $application->add(new Command\WanInfosCommand('wan:infos', $container));
 $application->add(new Command\WifiStatusCommand('wifi:status', $container));

@@ -29,7 +29,7 @@ class UpdateCommand extends Command
     {
         $this
             ->setName('self-update')
-            ->setDescription('Updates one-wire.phar to the latest version')
+            ->setDescription('Updates livebox.phar to the latest version')
         ;
     }
 
