@@ -42,13 +42,11 @@ checks:
             verify_parent_constraints: true
 
 filter:
-    paths:
-        - "src/"
-    excluded_paths:
-        - "tests/"
-        # Everything in a root level "tests" directory will be excluded
     dependency_paths:
         - "vendor/*"
+        - "vendor/"
+        - "livebox/vendor/"
+        - "livebox/vendor/*"
 build:
     project_setup:
         before:
