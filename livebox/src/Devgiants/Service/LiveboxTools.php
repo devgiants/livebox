@@ -15,6 +15,7 @@ use Buzz\Util\CookieJar;
 use Buzz\Message\MessageInterface;
 use Buzz\Util\Url;
 use Symfony\Component\Console\Input\InputInterface;
+use Devgiants\Exception\AuthenticationException;
 
 class LiveboxTools {
 
@@ -125,7 +126,7 @@ class LiveboxTools {
 			return $json->data->contextID;
 		} else {
 			// TODO handle
-			throw new \AuthenticationException();
+			throw new AuthenticationException();
 		}
 	}
 
