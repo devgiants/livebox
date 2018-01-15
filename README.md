@@ -1,3 +1,6 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/devgiants/livebox/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/devgiants/livebox/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/devgiants/livebox/badges/build.png?b=master)](https://scrutinizer-ci.com/g/devgiants/livebox/build-status/master)
+[![Code Intelligence Status](https://scrutinizer-ci.com/g/devgiants/livebox/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 # Livebox 3/4 control command line tool 1.1.1
 ## Presentation
 Allow to easily control Livebox 3/4 (internet box from Orange ISP) by CLI, easing home automation tasks.
