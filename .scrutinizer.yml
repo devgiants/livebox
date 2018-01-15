@@ -48,7 +48,7 @@ filter:
         - "livebox/tests/"
         # Everything in a root level "tests" directory will be excluded
     dependency_paths:
-        - "livebox/vendor/"
+        - "livebox/vendor/*"
 build:
     project_setup:
         before:
