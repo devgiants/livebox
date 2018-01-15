@@ -58,3 +58,4 @@ build:
     environment:
         variables:
             COMPOSER: 'livebox/composer.json'
+            
