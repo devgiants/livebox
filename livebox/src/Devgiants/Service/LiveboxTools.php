@@ -86,37 +86,7 @@ class LiveboxTools {
 		// Add cookie to JAR
 		$this->cookieJar->addCookie( $cookie );
 
-		//		foreach($response->getHeader('Set-Cookie') as $cookieString) {
-		//			$cookie = new CookieJar();
-		//		}
-
-		//		$response = $this->client->post( "$host/ws", [
-		//			RequestOptions::HEADERS => [
-		//				'Content-Type'  => 'application/x-sah-ws-1-call+json; charset=UTF-8',
-		//				'Authorization' => 'X-Sah-Login',
-		//			],
-		//			RequestOptions::JSON    => [
-		//				'service'    => 'sah.Device.Information',
-		//				'method'     => 'createContext',
-		//				'parameters' => [
-		//					'applicationName' => 'so_sdkut',
-		//					'username'        => $username,
-		//					'password'        => $password,
-		//				],
-		//			],
-		//		] );
-
-
-		//		foreach ( $response->getHeader( 'Set-Cookie' ) as $cookieString ) {
-		//			$cookie = SetCookie::fromString( $cookieString );
-		//			$cookie->setDomain( '192.168.1.1' );
-		//			//			var_dump( $this->cookieJar->setCookie($cookie));
-		//			$this->cookieJar->save();
-		//		}
-		//		echo($this->cookieJar->count());
-
-		//		var_dump( $this->cookieJar->toArray() );
-		//		die();
+		
 
 		$json = json_decode( $response->getContent() );
 
@@ -140,9 +110,7 @@ class LiveboxTools {
 		foreach($this->cookieJar->getCookies() as $cookie) {
 			$cookieString .= "{$cookie->getName()}={$cookie->getValue()}; ";
 		}
-//		array_map( function ( Cookie $cookie ) use ( $cookieString ) {
-//			$cookieString .= "{$cookie->getName()}={$cookie->getValue()}; ";
-//		}, $this->cookieJar->getCookies() );
+
 
 		return $cookieString;
 	}
