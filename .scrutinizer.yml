@@ -50,6 +50,9 @@ filter:
     dependency_paths:
         - "livebox/vendor/"
 build:
+    project_setup:
+        before:
+            - "cd livebox"
     nodes:
         analysis:
             tests:
