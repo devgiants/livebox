@@ -8,8 +8,8 @@
 
 namespace Devgiants\Exception;
 
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Config\Definition\Exception\Exception as SymfonyException;
 
-class MissingConfigurationFileException extends Exception {
+class MissingConfigurationFileException extends SymfonyException {
 
 }

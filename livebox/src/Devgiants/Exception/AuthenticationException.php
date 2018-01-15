@@ -6,8 +6,8 @@
  * Time: 12:20
  */
 
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Config\Definition\Exception\Exception as SymfonyException;
 
-class AuthenticationException extends Exception {
+class AuthenticationException extends SymfonyException {
 
 }
