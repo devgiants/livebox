@@ -42,6 +42,8 @@ checks:
             verify_parent_constraints: true
 
 filter:
+    paths:
+        - "livebox/src/"
     excluded_paths:
         - "livebox/tests/"
         # Everything in a root level "tests" directory will be excluded
@@ -53,3 +55,6 @@ build:
             tests:
                 override:
                     - php-scrutinizer-run
+    environment:
+        variables:
+            COMPOSER: 'livebox/composer.json'
