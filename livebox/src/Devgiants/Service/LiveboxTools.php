@@ -158,7 +158,7 @@ class LiveboxTools {
 	 * @param $host
 	 */
 	public function logout( $host ) {
-		$response = $this->browser->post( "$host/logout" );
+		$$this->browser->post( "$host/logout" );
 	}
 
 }
