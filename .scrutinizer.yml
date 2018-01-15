@@ -41,7 +41,12 @@ checks:
             verify_documented_constraints: true
             verify_parent_constraints: true
 
-
+filter:
+    excluded_paths:
+        - "livebox/tests/"
+        # Everything in a root level "tests" directory will be excluded
+    dependency_paths:
+        - "livebox/vendor/"
 build:
     nodes:
         analysis:
