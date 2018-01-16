@@ -43,9 +43,6 @@ checks:
 
 filter:
     dependency_paths:
-        - "vendor/*"
-        - "vendor/"
-        - "livebox/vendor/"
         - "livebox/vendor/*"
 build:
     dependencies:
