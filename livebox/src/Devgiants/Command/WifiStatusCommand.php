@@ -38,7 +38,6 @@ class WifiStatusCommand extends ApplicationCommand {
 		$this
 			->setName( 'wifi:status' )
 			->setDescription( 'Get wifi status (1 = ON, 0 = OFF)' )
-			->addArgument( static::STATUS, InputArgument::OPTIONAL, "Get wifi status" )
 			->setHelp( "This command allows you to get wifi status" );
 
 		parent::configure();
@@ -57,23 +56,20 @@ class WifiStatusCommand extends ApplicationCommand {
 			$configurationManager = new ConfigurationManager( $ymlFile );
 			$configuration        = $configurationManager->load();
 
-			// Get status
-			if ( $input->hasArgument( static::STATUS ) ) {
-				$response = $this->tools->createRequest(
-					Request::METHOD_POST,
-					"{$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ]}/ws",
-					[
-						"service"    => "NMC.Wifi",
-						"method"     => "get",
-						"parameters" => [],
-					]
-				);
+			$response = $this->tools->createRequest(
+				Request::METHOD_POST,
+				"{$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ]}/ws",
+				[
+					"service"    => "NMC.Wifi",
+					"method"     => "get",
+					"parameters" => [],
+				]
+			);
 
-				$json = json_decode( $response->getContent() );
+			$json = json_decode( $response->getContent() );
 
-				if ( isset( $json->result->status ) ) {
-					$output->write( $json->result->status->Status ? 1 : 0 );
-				}
+			if ( isset( $json->result->status ) ) {
+				$output->write( $json->result->status->Status ? 1 : 0 );
 			}
 
 			// Handle post command stuff
