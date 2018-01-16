@@ -38,7 +38,7 @@ class LiveboxTools {
 	 * LiveboxTools constructor.
 	 */
 	public function __construct() {
-		$this->browser = new Browser();
+		$this->browser   = new Browser();
 		$this->cookieJar = new CookieJar();
 	}
 
@@ -81,12 +81,13 @@ class LiveboxTools {
 
 		// Create sessid cookie
 		$cookie = new Cookie();
-		$cookie->fromSetCookieHeader( $response->getHeader( 'Set-Cookie' ), $host );
+		if ( ! is_array( $cookieString = $response->getHeader( 'Set-Cookie' ) ) ) {
+			$cookie->fromSetCookieHeader( $cookieString, $host );
 
-		// Add cookie to JAR
-		$this->cookieJar->addCookie( $cookie );
+			// Add cookie to JAR
+			$this->cookieJar->addCookie( $cookie );
+		}
 
-		
 
 		$json = json_decode( $response->getContent() );
 
@@ -107,7 +108,7 @@ class LiveboxTools {
 	public function getCookieHeaderForRequest() {
 		$cookieString = "Cookie: ";
 
-		foreach($this->cookieJar->getCookies() as $cookie) {
+		foreach ( $this->cookieJar->getCookies() as $cookie ) {
 			$cookieString .= "{$cookie->getName()}={$cookie->getValue()}; ";
 		}
 
@@ -158,7 +159,7 @@ class LiveboxTools {
 	 * @param $host
 	 */
 	public function logout( $host ) {
-		$$this->browser->post( "$host/logout" );
+		$this->browser->post( "$host/logout" );
 	}
 
 }
