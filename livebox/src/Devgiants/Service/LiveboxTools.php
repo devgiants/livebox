@@ -81,12 +81,11 @@ class LiveboxTools {
 
 		// Create sessid cookie
 		$cookie = new Cookie();
-		if ( ! is_array( $cookieString = $response->getHeader( 'Set-Cookie' ) ) ) {
-			$cookie->fromSetCookieHeader( $cookieString, $host );
 
-			// Add cookie to JAR
-			$this->cookieJar->addCookie( $cookie );
-		}
+		$cookie->fromSetCookieHeader( (string) $response->getHeader( 'Set-Cookie' ), $host );
+
+		// Add cookie to JAR
+		$this->cookieJar->addCookie( $cookie );
 
 
 		$json = json_decode( $response->getContent() );
