@@ -35,7 +35,7 @@ else
 
     # Push everything
     echo "Push to repo"
-    git push
+    git push origin master
 
     # Push tags
     echo "Push tags"
@@ -48,13 +48,15 @@ else
 
     echo "Goes to GH pages"
     git checkout gh-pages
+    git pull origin gh-pages
+
     mv /tmp/${APPNAME}.phar downloads/${APPNAME}-${APPVERSION}.phar
 
     echo "Generating manifest"
-    rm /tmp/manifest.json
+    rm manifest.json
     sha1="$(sha1sum downloads/${APPNAME}-${APPVERSION}.phar | awk '{ print $1 }')"
 
-    cat <<EOF > /tmp/manifest.json
+    cat <<EOF > manifest.json
 [
   {
     "name": "${APPNAME}.phar",
