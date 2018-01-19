@@ -1,17 +1,17 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/devgiants/livebox/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/devgiants/livebox/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/devgiants/livebox/badges/build.png?b=master)](https://scrutinizer-ci.com/g/devgiants/livebox/build-status/master)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/devgiants/livebox/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
-# Livebox 3/4 control command line tool 1.1.1
+# Livebox 3/4 control command line tool 1.2.0
 ## Presentation
 Allow to easily control Livebox 3/4 (internet box from Orange ISP) by CLI, easing home automation tasks.
 
 ## Installation
 ```
 # Get the application
-wget https://devgiants.github.io/livebox/downloads/livebox-1.1.1.phar
+wget https://devgiants.github.io/livebox/downloads/livebox-1.2.0.phar
 
 # Move it in command folder
-mv livebox-1.1.1.phar /usr/bin/livebox
+mv livebox-1.2.0.phar /usr/bin/livebox
 
 # Make it executable
 chmod u+x /usr/bin/livebox
