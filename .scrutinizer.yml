@@ -48,16 +48,10 @@ build:
     dependencies:
         before:
             - "cd livebox"
-            - "composer update"
+            - "composer install"
     nodes:
         analysis:
             tests:
                 override:
                     - php-scrutinizer-run
-#    dependencies:
-#        before:
-#            - composer install
-#    environment:
-#        variables:
-#            COMPOSER: 'livebox/composer.json'
 
