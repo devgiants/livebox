@@ -8,6 +8,7 @@ use Devgiants\Configuration\ConfigurationManager;
 use Devgiants\Configuration\ApplicationConfiguration as AppConf;
 use Pimple\Container;
 use Symfony\Component\Console\Exception\InvalidOptionException;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -94,6 +95,8 @@ class NatDeleteCommand extends ApplicationCommand
 				} else {
 					throw new InvalidOptionException( "Id argument invalid, can't find it in existing NAT rules." );
 				}
+			} else {
+				throw new LogicException('Wrong format from nat:infos command');
 			}
 
 		    // Handle post command stuff
