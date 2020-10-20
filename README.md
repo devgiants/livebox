@@ -20,21 +20,21 @@ chmod u+x /usr/bin/livebox
 Some commands require authentication, some not. An authentication file in yaml must be provided :
 ```yml
 configuration:
-  # Optional: specify Livebox local DNS name or IP. Default to 192.168.1.1 
-  host: 192.168.1.1 
-  # Optional: specify user to use for connection 
+  # Optional: specify Livebox local DNS name or IP. Default to 192.168.1.1
+  host: 192.168.1.1
+  # Optional: specify user to use for connection
   user: admin
-  
+
   password: pass
 ```
 
 This authentication file can be passed by 2 different ways :
 1) Just make a `xxx.yml` that would lie with the `livebox` tool. It will be automatically handled. _Note: For this option, commands will be shorter (such as `livebox wifi:switch on` instead of `livebox wifi:switch on --file=/path/to/yaml.yml`) but in this very case you shouldn't put those 2 files in `/usr/bin/`, because this is not the configuration file place._
-2) Make your YAML config file and explicitly pass it to commands.  
+2) Make your YAML config file and explicitly pass it to commands.
 
 ## Commands
 As every [Console component](https://symfony.com/doc/current/components/console.html)-based application, you can have detailled command list by doing `livebox list`
-_Note: as stated above, all commands below take one `--file` option to pass a configuration file path_ 
+_Note: as stated above, all commands below take one `--file` option to pass a configuration file path_
 ### Wan info
 `livebox wan:infos`
 
@@ -71,6 +71,59 @@ Return 1 if Wifi is enabled, 0 otherwise.
 `livebox wifi:switch`
 
 Allow to enable/disable wifi with `on` or `off` argument (i.e `livebox wifi:switch on` or `livebox wifi:switch off`)
+
+### NAT
+#### Infos
+`livebox nat:infos`
+
+Will return a json object with all following data
+
+```json
+{"result": {
+  "status": {
+    "webui_SSHD": {
+      "Id": "webui_HTTP",
+      "Origin": "webui",
+      "Description": "HTTP",
+      "Status": "Enabled",
+      "SourceInterface": "data",
+      "Protocol": "6",
+      "ExternalPort": "80",
+      "InternalPort": "80",
+      "SourcePrefix": "",
+      "DestinationIPAddress": "192.168.1.2",
+      "DestinationMACAddress": "",
+      "LeaseDuration": 0,
+      "HairpinNAT": true,
+      "SymmetricSNAT": false,
+      "UPnPV1Compat": false,
+      "Enable": true
+    }
+  }
+}}
+```
+
+#### Switch
+`livebox nat:switch <status> <id>`
+
+Allow to enable/disable wifi with `enable` or `disable` argument (i.e `livebox nat:switch enable HTTP` or `livebox bat:switch disable HTTP`)
+#### Create
+`livebox nat:create <id> <ip> <external> <internal> [<protocol>]`
+
+Allow to create new NAT rule with the following argument :
+- `id` Name of your rule used as ID
+- `ip` Ip of your destination for routing
+- `external` External port that is accesible for outside
+- `internal` Internal port that is available on the destination
+- `protocal` (optional) Protocol for routing: tcp, udp or both
+
+i.e `livebox nat:create HTTP 192.168.1.2 80 80 tcp`
+
+#### Delete
+`livebox nat:delete <id>`
+
+Allow to delete specific rule with his `id` (i.e `livebox nat:delete HTTP`)
+
 
 ## Technical explanation
 I created this script mainly using reverse engineering, and also checking excellent work on [sysbus script by rene-d](https://github.com/rene-d/sysbus).

@@ -36,6 +36,10 @@ $container['app_dir'] = getcwd();
 $application->add(new Command\UpdateCommand('self-update'));
 
 $application->add(new Command\WanInfosCommand('wan:infos', $container));
+$application->add(new Command\NatInfosCommand('nat:infos', $container));
+$application->add(new Command\NatCreateCommand('nat:create', $container));
+$application->add(new Command\NatDeleteCommand('nat:delete', $container));
+$application->add(new Command\NatSwitchCommand('nat:switch', $container));
 $application->add(new Command\WifiStatusCommand('wifi:status', $container));
 $application->add(new Command\WifiSwitchCommand('wifi:switch', $container));
 

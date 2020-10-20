@@ -14,9 +14,11 @@ use Devgiants\Service\LiveboxTools;
 use Monolog\Logger;
 use Pimple\Container;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\Finder;
 
 abstract class ApplicationCommand extends Command {
@@ -106,5 +108,20 @@ abstract class ApplicationCommand extends Command {
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 		$this->tools->logout( '192.168.1.1' );
+	}
+
+	/**
+	 * Run command and return the output in the current command
+	 *
+	 * @param ArrayInput $input
+	 * @return string
+	 */
+	protected function getRunOutput ( ArrayInput $input ) : string {
+		$application = $this->getApplication();
+		$application->setAutoExit(false);
+		$output = new BufferedOutput();
+		$application->run($input, $output);
+		$application->setAutoExit(true);
+		return $output->fetch();
 	}
 }
