@@ -102,6 +102,8 @@ class NatSwitchCommand extends ApplicationCommand
 				} else {
 					throw new InvalidOptionException( "Id argument invalid, can't find it in existing NAT rules." );
 				}
+			} else {
+				throw new LogicException('Wrong format from nat:infos command');
 			}
 		    // Handle post command stuff
 		    parent::execute( $input, $output );
