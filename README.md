@@ -35,7 +35,8 @@ This authentication file can be passed by 2 different ways :
 ## Commands
 As every [Console component](https://symfony.com/doc/current/components/console.html)-based application, you can have detailled command list by doing `livebox list`
 _Note: as stated above, all commands below take one `--file` option to pass a configuration file path_
-### Wan info
+
+### Wan info
 `livebox wan:infos`
 
 Will return a json object with all following data
@@ -106,7 +107,8 @@ Will return a json object with all following data
 #### Switch
 `livebox nat:switch <status> <id>`
 
-Allow to enable/disable wifi with `enable` or `disable` argument (i.e `livebox nat:switch enable HTTP` or `livebox bat:switch disable HTTP`)
+Allow to enable/disable NAT rule with `enable` or `disable` argument (i.e `livebox nat:switch enable HTTP` or `livebox bat:switch disable HTTP`)
+
 #### Create
 `livebox nat:create <id> <ip> <external> <internal> [<protocol>]`
 
@@ -123,7 +125,6 @@ i.e `livebox nat:create HTTP 192.168.1.2 80 80 tcp`
 `livebox nat:delete <id>`
 
 Allow to delete specific rule with his `id` (i.e `livebox nat:delete HTTP`)
-
 
 ## Technical explanation
 I created this script mainly using reverse engineering, and also checking excellent work on [sysbus script by rene-d](https://github.com/rene-d/sysbus).
