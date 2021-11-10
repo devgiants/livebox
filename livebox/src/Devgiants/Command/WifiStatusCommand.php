@@ -56,6 +56,14 @@ class WifiStatusCommand extends ApplicationCommand {
 			$configurationManager = new ConfigurationManager( $ymlFile );
 			$configuration        = $configurationManager->load();
 
+
+			// Authentication
+			$this->tools->authenticate(
+				$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ],
+				$configuration[ AppConf::USER[ AppConf::NODE_NAME ] ],
+				$configuration[ AppConf::PASSWORD ]
+			);
+
 			$response = $this->tools->createRequest(
 				Request::METHOD_POST,
 				"{$configuration[ AppConf::HOST[ AppConf::NODE_NAME ] ]}/ws",
