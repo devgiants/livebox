@@ -29,7 +29,7 @@ class NatInfosCommand extends ApplicationCommand
         $this
             ->setName('nat:infos')
             ->setDescription('Read NAT infos')
-            ->setHelp("This command allows you to read livebox NAR infos")
+            ->setHelp("This command allows you to read livebox NAT infos")
         ;
 
         parent::configure();

@@ -38,8 +38,8 @@ class NatSwitchCommand extends ApplicationCommand
     {
         $this
             ->setName('nat:switch')
-            ->setDescription('Switch NAT entry statuc')
-			->addArgument( static::ARGUMENT_STATUS, InputArgument::REQUIRED, 'Switch status enable or disable' )
+            ->setDescription('Switch NAT entry status')
+			->addArgument( static::ARGUMENT_STATUS, InputArgument::REQUIRED, 'Switch status : enable or disable' )
 			->addArgument( static::ARGUMENT_ID, InputArgument::REQUIRED, 'Id of the NAT rule' )
             ->setHelp("This command allows you to enable/disable livebox NAT entry")
         ;

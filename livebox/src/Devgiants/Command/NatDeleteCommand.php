@@ -68,10 +68,15 @@ class NatDeleteCommand extends ApplicationCommand
 
 			$ruleId = $input->getArgument( static::ARGUMENT_ID );
 
-			$response = $this->getRunOutput(new ArrayInput([
-				'command' => 'nat:infos',
-			]));
+			$args = [
+                'command' => 'nat:infos'
+            ];
+            if($input->hasOption('file')) {
+                $args['--file'] = $input->getOption('file');
+            }
+			$commandInput = new ArrayInput($args);
 
+			$response = $this->getRunOutput($commandInput);
 			$json = json_decode($response);
 
 			if (!empty($json->result) && !empty($json->result->status)) {
@@ -79,7 +84,6 @@ class NatDeleteCommand extends ApplicationCommand
 				$fullName = NatRule::ORIGIN . '_' . $ruleId;
 				if (isset($natRules->$fullName)) {
 					$natRule = NatRule::buildFrom($natRules->$fullName);
-
 
 					// Execute request
 					$response = $this->tools->createRequest(
