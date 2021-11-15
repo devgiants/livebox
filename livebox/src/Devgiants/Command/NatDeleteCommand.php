@@ -3,7 +3,6 @@
 namespace Devgiants\Command;
 
 use Buzz\Message\Request;
-use Devgiants\Behavior\OtherCommandRunnable;
 use Devgiants\Model\ApplicationCommand;
 use Devgiants\Model\NatRule;
 use Devgiants\Configuration\ConfigurationManager;

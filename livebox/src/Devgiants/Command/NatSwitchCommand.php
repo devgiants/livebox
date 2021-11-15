@@ -74,10 +74,11 @@ class NatSwitchCommand extends ApplicationCommand
 				throw new InvalidOptionException( "Status argument get only \"enable\" or \"disable\" value." );
 			}
 
-			$response = $this->runAnotherCommand(new ArrayInput([
-				'command' => 'nat:infos',
-			]));
+            $commandInput = new ArrayInput([
+                'command' => 'nat:infos'
+            ]);
 
+			$response = $this->runAnotherCommand($commandInput, $input);
 			$json = json_decode($response);
 
 			if (!empty($json->result) && !empty($json->result->status)) {
@@ -103,7 +104,7 @@ class NatSwitchCommand extends ApplicationCommand
 					throw new InvalidOptionException( "Id argument invalid, can't find it in existing NAT rules." );
 				}
 			} else {
-				throw new LogicException('Wrong format from nat:infos command');
+				throw new \LogicException('Wrong format from nat:infos command');
 			}
 		    // Handle post command stuff
 		    parent::execute( $input, $output );
