@@ -107,20 +107,25 @@ abstract class ApplicationCommand extends Command {
 	 * @inheritdoc
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
+	    # TODO use host given in configuration file
 		$this->tools->logout( '192.168.1.1' );
 	}
 
 	/**
 	 * Run command and return the output in the current command
 	 *
-	 * @param ArrayInput $input
+	 * @param InputInterface $commandToRunInput
+	 * @param InputInterface $initalCommandInput
 	 * @return string
 	 */
-	protected function getRunOutput ( ArrayInput $input ) : string {
+	protected function runAnotherCommand (InputInterface $commandToRunInput, InputInterface $initalCommandInput) : string {
+        if ($initalCommandInput->hasOption('file')) {
+            $commandToRunInput->setOption('--file', $initalCommandInput->getOption('file'));
+        }
 		$application = $this->getApplication();
 		$application->setAutoExit(false);
 		$output = new BufferedOutput();
-		$application->run($input, $output);
+		$application->run($commandToRunInput, $output);
 		$application->setAutoExit(true);
 		return $output->fetch();
 	}

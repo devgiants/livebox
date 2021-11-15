@@ -74,7 +74,7 @@ class NatSwitchCommand extends ApplicationCommand
 				throw new InvalidOptionException( "Status argument get only \"enable\" or \"disable\" value." );
 			}
 
-			$response = $this->getRunOutput(new ArrayInput([
+			$response = $this->runAnotherCommand(new ArrayInput([
 				'command' => 'nat:infos',
 			]));
 
