@@ -52,6 +52,11 @@ class NatRule {
 	 */
 	private $sourceInterface = 'data';
 
+    /**
+     * @var string
+     */
+    private $sourcePrefix = '';
+
 	/**
 	 * NatRule constructor.
 	 */
@@ -150,6 +155,24 @@ class NatRule {
 		$this->sourceInterface = $sourceInterface;
 	}
 
+    /**
+     * @return string
+     */
+    public function getSourcePrefix(): ?string
+    {
+        return $this->sourcePrefix;
+    }
+
+    /**
+     * @param string $sourcePrefix
+     */
+    public function setSourcePrefix(?string $sourcePrefix = null): void
+    {
+        $this->sourcePrefix = $sourcePrefix;
+    }
+
+
+
 	/**
 	 * Get the output for create rule
 	 *
@@ -166,7 +189,8 @@ class NatRule {
 			'origin',
 			'persistent',
 			'protocol',
-			'sourceInterface'
+			'sourceInterface',
+            'sourcePrefix'
 		];
 		return $this->buildOutput($fieldsOutput);
 	}
@@ -218,6 +242,7 @@ class NatRule {
 		$natRule->setPersistent((bool) $input->Persistent);
 		$natRule->setProtocol((int) $input->Protocol);
 		$natRule->setSourceInterface($input->SourceInterface);
+		$natRule->setSourcePrefix($input->sourcePrefix);
 		return $natRule;
 	}
 
