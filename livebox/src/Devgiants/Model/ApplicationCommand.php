@@ -119,9 +119,12 @@ abstract class ApplicationCommand extends Command {
 	 * @return string
 	 */
 	protected function runAnotherCommand (InputInterface $commandToRunInput, InputInterface $initalCommandInput) : string {
-        if ($initalCommandInput->hasOption('file')) {
-            $commandToRunInput->setOption('--file', $initalCommandInput->getOption('file'));
-        }
+//	    var_dump($commandToRunInput->getOptions());
+//	    die();
+//        if ($initalCommandInput->hasOption('file')) {
+//            $commandToRunInput->setOption('file', $initalCommandInput->getOption('file'));
+//        }
+//        die('OK');
 		$application = $this->getApplication();
 		$application->setAutoExit(false);
 		$output = new BufferedOutput();

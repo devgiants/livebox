@@ -75,7 +75,8 @@ class NatSwitchCommand extends ApplicationCommand
 			}
 
             $commandInput = new ArrayInput([
-                'command' => 'nat:infos'
+                'command' => 'nat:infos',
+                '--file' => $input->getOption('file')
             ]);
 
 			$response = $this->runAnotherCommand($commandInput, $input);

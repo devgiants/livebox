@@ -13,12 +13,13 @@ use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class NatDeleteCommand extends ApplicationCommand
 {
 
-    const ARGUMENT_ID = 'id';
+    const OPTION_ID = 'id';
 
     /**
      * Wan command constructor.
@@ -39,8 +40,8 @@ class NatDeleteCommand extends ApplicationCommand
         $this
             ->setName('nat:delete')
             ->setDescription('Delete NAT entry')
-            ->addArgument(static::ARGUMENT_ID, InputArgument::REQUIRED, 'Id of the NAT rule')
-            ->setHelp("This command allows you to remove livebox NAT entry");
+            ->addOption(static::OPTION_ID, static::OPTION_ID, InputOption::VALUE_REQUIRED, 'Id of the NAT rule')
+            ->setHelp("This command allows you to remove livebox NAT entry by ID");
 
         parent::configure();
     }
@@ -50,7 +51,6 @@ class NatDeleteCommand extends ApplicationCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $ymlFile = $this->getConfigurationFile($input);
 
         if ($ymlFile !== NULL && is_file($ymlFile)) {
@@ -67,10 +67,11 @@ class NatDeleteCommand extends ApplicationCommand
                 $configuration[AppConf::PASSWORD]
             );
 
-            $ruleId = $input->getArgument(static::ARGUMENT_ID);
+            $ruleId = $input->getOption(static::OPTION_ID);
 
             $commandInput = new ArrayInput([
-                'command' => 'nat:infos'
+                'command' => 'nat:infos',
+                '--file' => $input->getOption('file')
             ]);
 
             $response = $this->runAnotherCommand($commandInput, $input);
