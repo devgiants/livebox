@@ -6,16 +6,9 @@
 Allow to easily control Livebox 3/4 (internet box from Orange ISP) by CLI, easing home automation tasks.
 
 ## Installation
-```
-# Get the application
-wget https://devgiants.github.io/livebox/downloads/livebox-1.2.1.phar
 
-# Move it in command folder
-mv livebox-1.2.1.phar /usr/bin/livebox
+Just clone the repository and run `php livebox/bin/livebox`
 
-# Make it executable
-chmod u+x /usr/bin/livebox
-```
 ## Authentication
 Some commands require authentication, some not. An authentication file in yaml must be provided :
 ```yml
