@@ -7,7 +7,9 @@ Allow to easily control Livebox 3/4 (internet box from Orange ISP) by CLI, easin
 
 ## Installation
 
-Just clone the repository and run `php livebox/bin/livebox`
+1. Clone the repository
+2. Install dependencies (`composer install`, see [composer](https://getcomposer.org/) if you need more details)
+3. run `php livebox/bin/livebox`
 
 ## Authentication
 Some commands require authentication, some not. An authentication file in yaml must be provided :
